@@ -10,7 +10,7 @@ function getMeetTimesMap(meetTimes) {
     for(var m = 0; m < meetTimes.length; m++) {
         for(var d = 0; d < meetTimes[m].meetDays.length; d++) {
             var day = meetTimes[m].meetDays[d];
-            for(var p = meetTimes[m].startPeriod; p <= meetTimes[m].endPeriod; p++) {
+            for(var p = parseInt(meetTimes[m].startPeriod); p <=  parseInt(meetTimes[m].endPeriod); p++) {
                 map[day].push(p);
             }
         }
@@ -103,25 +103,54 @@ exports.search = async function(req, res) {
     var courses = await Course.find(courseSearch);
 
     //filter functions, that will by default, return true
-    var fitCurSched = function(meetTimes) {
+    var fitAroundCurSched = function(courseMeetTimes) {
         return true;
     };
-    var fitRequestedSchedule = function(meetTimes) {
+    var fitIntoRequestedSchedule = function(courseMeetTimes) {
         return true;
     };
     //If this request cares about only getting courses that fit the schedule
     if(body.FitToSchedule) {
         //then redefine the filter function to actually do something
-        fitCurSched = function(meetTimes) {
-            //TODO
+        fitAroundCurSched = function(courseMeetTimes) {
+            var currSched = body.FitToSchedule;
+            for(const [day, times] of Object.entries(courseMeetTimes)) {
+                if(!currSched[day]) {continue;}
+                for(var t = 0; t < times.length; t++) {
+                    //assert that the current schedule does not contain any of the
+                    //new classes meet times
+                    if(currSched[day].indexOf(times[t]) !== -1) {
+                        return false;
+                    }
+                }
+            }
             return true;
         };
     }
     //If this request cares about only getting courses that are in certain times
     if(body.ClassMeeting) {
         //then redefine the filter function to actually do something
-        fitRequestedSchedule = function(meetTimes) {
-            //TODO
+        fitIntoRequestedSchedule = function(courseMeetTimes) {
+            var requestedSched = body.ClassMeeting;
+            for(const [day, times] of Object.entries(courseMeetTimes)) {
+                if(!requestedSched[day]) {
+                    //if the requested schedule doesn't have a certain day,
+                   if(times.length > 0) {
+                       //and the class meets at least once on that day
+                       return false;
+                   } else {
+                       //if the class doesn't meet on that day
+                       continue;
+                   }
+                }
+                for(var t = 0; t < times.length; t++) {
+                    //assert that all of the classes meet times exist
+                    //in the current schedule
+                    if(requestedSched[day].indexOf(times[t]) === -1) {
+                        return false;
+                    }
+                }
+            }
             return true;
         };
     }
@@ -133,7 +162,7 @@ exports.search = async function(req, res) {
         var rating = await courseEvals.getCourseEval(courses[i].code);
         for (var j = 0; j < courses[i].sections.length; j++) {
             var meetTimes = getMeetTimesMap(courses[i].sections[j].meetTimes);
-            if(fitCurSched(meetTimes) && fitRequestedSchedule(meetTimes)) {
+            if(fitAroundCurSched(meetTimes) && fitIntoRequestedSchedule(meetTimes)) {
                 var instructors = [];
                 for (var k = 0; k < courses[i].sections[j].instructors.length; k++) {
                     instructors.push(courses[i].sections[j].instructors[k])
