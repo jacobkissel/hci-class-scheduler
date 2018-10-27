@@ -7,6 +7,10 @@ mongoose.connect(config.db.uri);
 exports.getEvalData = async function(req, res) {
     if(req.query['name']) {
         var teacherEval = await TeacherEval.findOne({"name" : req.query['name']});
+        if(!teacherEval) {
+            res.status(400).send("There does not exist eval data for the teacher with the name: " + req.query['name']);
+            return;
+        }
         if(req.query['course']) {//if they are looking for a specific teachers course evals
             var ret = [];
             var c = -1;
