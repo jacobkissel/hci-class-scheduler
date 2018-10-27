@@ -5,6 +5,7 @@ var path = require('path'),
     config = require('./config'),
     classScheduleRouter = require('../routes/classScheduleRoute'),
     teacherEvalsRouter = require('../routes/teacherEvalsRoute'),
+    courseEvalRouter = require('../routes/courseEvalsRoute'),
     cors = require('cors');
 
 module.exports.init = function() {
@@ -20,6 +21,7 @@ module.exports.init = function() {
 
     app.use('/api/teacher_evals', teacherEvalsRouter);
     app.use('/api/course_schedule', classScheduleRouter);
+    app.use('/api/course_evals', courseEvalRouter);
 
     return app;
 };
