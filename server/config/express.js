@@ -4,7 +4,8 @@ var path = require('path'),
     mongoose = require('mongoose'),
     config = require('./config'),
     classScheduleRouter = require('../routes/classScheduleRoute'),
-    teacherEvalsRouter = require('../routes/teacherEvalsRoute');
+    teacherEvalsRouter = require('../routes/teacherEvalsRoute'),
+    cors = require('cors');
 
 module.exports.init = function() {
     //connect to database
@@ -14,6 +15,8 @@ module.exports.init = function() {
     var app = express();
 
     app.use(bodyParser.json());
+
+    app.use(cors());
 
     app.use('/api/teacher_evals', teacherEvalsRouter);
     app.use('/api/course_schedule', classScheduleRouter);
