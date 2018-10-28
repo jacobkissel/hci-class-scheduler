@@ -16,11 +16,11 @@ var fs = require('fs'),
 //                 for each section in sections {
 //                     get evaluation data
 //                     https://evaluations.ufl.edu/results/Instructor.aspx/GetEvaluation?e=x-data-evalid
-                       if temp teacher obj already has this course code in their courses array
-                            if temp teacher obj alreayd has this semester in their evals[0].term
-                                update averages to reflect new value
-                            else
-                                add new entry in
+//                        if temp teacher obj already has this course code in their courses array
+//                             if temp teacher obj alreayd has this semester in their evals[0].term
+//                                 update averages to reflect new value
+//                             else
+//                                 add new entry in
 //                 }
 //         }
 //     }

@@ -1,6 +1,5 @@
 var fs = require('fs'),
     mongoose = require('mongoose'),
-    Schema = mongoose.Schema,
     CourseEval = require('./schemas/CourseEvalSchema.js'),
     TeacherEval = require('./schemas/TeacherEvalSchema.js'),
     config = require('./config/config'),

@@ -132,7 +132,7 @@ function courseListsRequest(num, callback) {
 
 var all_courses = [];
 
-function callBackFunc(err, courses) {
+async function callBackFunc(err, courses) {
     //console.log(courses[0]);
     console.log(courses[1]);
     if(courses[1] !== 0){
@@ -140,12 +140,17 @@ function callBackFunc(err, courses) {
         for (var i = 0; i < courses[0].length; i++) {
             var course = courses[0][i];
             //console.log(course);
-            new Course(course).save();
+            var dupeCourse = await Course.findOne({"code": course.code});
+            if(dupeCourse) {
+                console.log("Duplicate attempt failed for course: " + course.code);
+                continue;
+            }
+            var cours = await new Course(course).save();
         }
     }
 }
 
 console.log("loop");
-courseListsRequest(0, function (err, courses) {
-    callBackFunc(err, courses);
+courseListsRequest(0, async function (err, courses) {
+    await callBackFunc(err, courses);
 });
