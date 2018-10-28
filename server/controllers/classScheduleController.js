@@ -173,7 +173,8 @@ exports.search = async function(req, res) {
                     "Credits": courses[i].sections[j].credits,
                     "Rating": rating,
                     "Professor": instructor,
-                    "MeetTimes": meetTimes
+                    "MeetTimes": meetTimes,
+                    "Section": courses[i].sections[j].sectionNumber
                 });
             }
         }
