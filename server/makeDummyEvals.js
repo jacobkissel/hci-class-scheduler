@@ -72,7 +72,7 @@ Course.find(async function(err, courses) {
            var section = course.sections[j];
            for(var k = 0; k < section.instructors.length; k++) {
                //If we haven't seen this instructor for this course yet, add it to the list
-               if(courseSet[course.code].indexOf(section.instructors[k] === -1)) {
+               if(courseSet[course.code].indexOf(section.instructors[k]) === -1) {
                    courseSet[course.code].push(section.instructors[k]);
                }
                //if we haven't seen this instructor before, add an entry in the instructors map
