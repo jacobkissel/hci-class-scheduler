@@ -6,7 +6,8 @@ mongoose.connect(config.db.uri);
 
 exports.getEvalData = async function(req, res) {
     if(req.query['name']) {
-        var teacherEval = await TeacherEval.findOne({"name" : req.query['name']});
+        var teachName = req.query['name'].replace(/,/g," ");
+        var teacherEval = await TeacherEval.findOne({"name" : teachName});
         if(!teacherEval) {
             res.status(400).send("There does not exist eval data for the teacher with the name: " + req.query['name']);
             return;
