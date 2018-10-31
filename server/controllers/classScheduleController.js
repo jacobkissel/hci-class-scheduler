@@ -170,6 +170,7 @@ exports.search = async function(req, res) {
                 var instructor = courses[i].sections[j].instructors.length > 0 ? courses[i].sections[j].instructors[0] : "";
                 retCourses.push({
                     "Name": name,
+                    "Code": courses[i].code,
                     "Credits": courses[i].sections[j].credits,
                     "Rating": rating,
                     "Professor": instructor,
